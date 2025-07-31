@@ -1,34 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@latest/lib/index.iife.min.js"></script>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>QuantomX - Meme Coin Trader</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div class="container">
-      <div class="terms-popup" id="terms">
-        <h2>⚠ Terms & Conditions</h2>
-        <p>By using this platform, you agree that profits/losses are your responsibility.</p>
-        <button onclick="acceptTerms()">I Agree</button>
+<body>
+  <div class="container">
+    <div class="terms-popup" id="terms">
+      <h2>⚠ Terms & Conditions</h2>
+      <p>By using this platform, you agree that profits/losses are your responsibility.</p>
+      <button onclick="acceptTerms()">I Agree</button>
+    </div>
+
+    <div id="wallet-connection">
+      <button class="btn" onclick="connectWallet()">Connect Wallet</button>
+      <p id="wallet-address"></p>
+    </div>
+
+    <div class="trade-box">
+      <h3>Swap Tokens</h3>
+
+      <label>From Token:</label>
+      <input id="fromToken" placeholder="e.g. SOL" />
+
+      <label>To Token:</label>
+      <input id="toToken" placeholder="e.g. BONK" />
+
+      <label>Amount ($):</label>
+      <input id="amount" type="number" placeholder="e.g. 50" />
+
+      <div class="btn-row">
+        <button class="btn" onclick="executeTrade('buy')">BUY</button>
+        <button class="btn" onclick="executeTrade('sell')">SELL</button>
       </div>
+    </div>
 
-     <div class="trade-box">
-  <h3>Trade</h3>
-  <label>From Token:</label>
-  <input id="fromToken" placeholder="e.g. SOL" />
+    <div class="status-box">
+      <p id="statusMessage">Ready to trade.</p>
+    </div>
+  </div>
 
-  <label>To Token:</label>
-  <input id="toToken" placeholder="e.g. BONK" />
-
-  <label>Amount ($):</label>
-  <input id="amount" type="number" placeholder="e.g. 50" />
-
-  <div class="btn-row">
-    <button class="btn" onclick="executeTrade('buy')">BUY</button>
-    <button class="btn" onclick="executeTrade('sell')">SELL</button>
+  <script src="script.js"></script>
+</body>
+>
   </div>
 </div>
 
