@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QuantomX - Meme Coin Trader</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="terms-popup" id="terms">
+        <h2>⚠ Terms & Conditions</h2>
+        <p>By using this platform, you agree that profits/losses are your responsibility.</p>
+        <button onclick="acceptTerms()">I Agree</button>
+      </div>
+
+      <div class="main-ui" id="app" style="display: none;">
+        <h1>💰 QuantomX</h1>
+        <p><i>Fast meme coin trading with wallet login</i></p>
+
+        <button onclick="connectWallet()" class="btn">Connect Wallet</button>
+
+        <div class="trade-box">
+          <h3>Buy / Sell</h3>
+          <input type="number" placeholder="Amount in USD" />
+          <input type="number" placeholder="Sell % (e.g. 30)" />
+          <div class="btn-row">
+            <button class="btn">BUY</button>
+            <button class="btn">SELL</button>
+          </div>
+        </div>
+
+        <div class="settings">
+          <label>SL: <input type="number" placeholder="Stop loss ($)" /></label>
+          <label>TP: <input type="number" placeholder="Take profit ($)" /></label>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
