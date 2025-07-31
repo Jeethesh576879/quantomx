@@ -34,10 +34,22 @@
     </div>
   </div>
 
+  <!-- JS Logic -->
+  <script>
+    async function executeTrade(type) {
+      const fromToken = document.getElementById('fromToken').value.toUpperCase();
+      const toToken = document.getElementById('toToken').value.toUpperCase();
+      const amount = parseFloat(document.getElementById('amount').value);
+
+      if (!fromToken || !toToken || isNaN(amount)) {
+        alert("Fill all fields correctly.");
+        return;
+      }
+
+      alert(`Simulated ${type.toUpperCase()} of $${amount} from ${fromToken} to ${toToken}`);
+      document.getElementById("statusMessage").textContent = `Simulated ${type.toUpperCase()} - waiting for real trade setup.`;
+    }
+  </script>
+
   <script src="script.js"></script>
 </body>
->
-  </div>
-</div>
-
-      
