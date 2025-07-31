@@ -26,37 +26,48 @@ function setStatus(msg) {
   document.getElementById("statusMessage").textContent = msg;
 }
 
-function executeTrade(type) {
-  const from = document.getElementById("fromToken").value.trim();
-  const to = document.getElementById("toToken").value.trim();
+async function executeTrade(type) {
+  const fromMint = document.getElementById("fromToken").value.trim(); // Token A
+  const toMint = document.getElementById("toToken").value.trim();     // Token B
   const amount = parseFloat(document.getElementById("amount").value.trim());
 
-  if (!wallet) {
-    setStatus("❌ Connect your wallet first.");
-    return;
+  if (!wallet) return setStatus("❌ Connect your wallet first.");
+  if (!fromMint || !toMint || isNaN(amount) || amount <= 0)
+    return setStatus("❌ Invalid input.");
+
+  setStatus(`⏳ Finding best route for ${amount}...`);
+
+  try {
+    const connection = new solanaWeb3.Connection("https://api.mainnet-beta.solana.com");
+
+    const jupiter = await Jupiter.init(connection, new solanaWeb3.PublicKey(wallet));
+
+    const inputAmount = amount * 10 ** 6; // assuming USDC 6 decimals
+    const routes = await jupiter.computeRoutes({
+      inputMint: new solanaWeb3.PublicKey(fromMint),
+      outputMint: new solanaWeb3.PublicKey(toMint),
+      amount: inputAmount,
+      slippage: 1,
+      forceFetch: true,
+    });
+
+    const bestRoute = routes.routesInfos[0];
+    if (!bestRoute) return setStatus("❌ No route found.");
+
+    setStatus("⚙️ Executing swap...");
+
+    const { transactions } = await jupiter.exchange({
+      routeInfo: bestRoute,
+    });
+
+    const signedTx = await window.solana.signTransaction(transactions[0].transaction);
+    const txid = await connection.sendRawTransaction(signedTx.serialize());
+    await connection.confirmTransaction(txid, "processed");
+
+    setStatus(`✅ Swap done! Tx: https://solscan.io/tx/${txid}`);
+  } catch (e) {
+    console.error(e);
+    setStatus("❌ Swap failed.");
   }
-
-  if (!from || !to || isNaN(amount) || amount <= 0) {
-    setStatus("❌ Invalid input. Check tokens and amount.");
-    return;
-  }
-
-  setStatus(`⏳ Executing ${type.toUpperCase()} ${amount} ${from} → ${to}...`);
-
-  // 🔧 Simulated delay — replace this with real Jupiter API in Step 4
-  setTimeout(() => {
-    setStatus(`✅ ${type.toUpperCase()} completed successfully.`);
-  }, 1500);
 }
 
-
-  if (!wallet) return setStatus("❌ Connect wallet first.");
-  if (!from || !to || !amount || amount <= 0) return setStatus("❌ Fill in all fields correctly.");
-
-  setStatus(`⏳ ${type.toUpperCase()} ${amount}$ from ${from} to ${to}...`);
-
-  // This will be replaced with real Jupiter swap code
-  setTimeout(() => {
-    setStatus(`✅ ${type.toUpperCase()} completed successfully.`);
-  }, 1500);
-}
