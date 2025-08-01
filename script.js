@@ -1,19 +1,20 @@
 let wallet = null;
 
 async function connectWallet() {
-  try {
-    const provider = window.phantom?.solana;
-    if (!provider || !provider.isPhantom) {
-      alert("Phantom wallet not found!");
-      return;
-    }
+  const provider = window.phantom?.solana;
+  if (!provider || !provider.isPhantom) {
+    alert("Phantom wallet not found!");
+    return;
+  }
 
+  try {
     const resp = await provider.connect();
     wallet = resp.publicKey.toString();
     document.getElementById("wallet-address").innerText = `Wallet: ${wallet.slice(0, 5)}...${wallet.slice(-4)}`;
+    document.getElementById("connect-btn").innerText = "Connected";
   } catch (err) {
     console.error(err);
-    alert("Failed to connect wallet");
+    alert("Wallet connection failed.");
   }
 }
 
@@ -30,46 +31,45 @@ async function executeTrade(direction) {
   const fee = parseFloat(document.getElementById("fee").value.trim()) || 0.3;
   const tip = parseFloat(document.getElementById("tip").value.trim()) || 0;
 
+  const status = document.getElementById("statusMessage");
+  status.innerText = "";
+
   if (!wallet || !fromMint || !toMint || !amountUSD || fromMint === toMint) {
     alert("Please fill in all fields correctly.");
     return;
   }
 
-  document.getElementById("statusMessage").innerText = "Fetching best route...";
+  status.innerText = "🔄 Getting best route...";
 
   try {
-    const jupiterQuoteUrl = `https://quote-api.jup.ag/v6/quote?inputMint=${fromMint}&outputMint=${toMint}&amount=${Math.floor(amountUSD * 10 ** 6)}&slippageBps=${slippage * 100}`;
-    const quote = await (await fetch(jupiterQuoteUrl)).json();
+    const quoteUrl = `https://quote-api.jup.ag/v6/quote?inputMint=${fromMint}&outputMint=${toMint}&amount=${Math.floor(amountUSD * 10 ** 6)}&slippageBps=${slippage * 100}`;
+    const quote = await (await fetch(quoteUrl)).json();
 
-    if (!quote || !quote.routes || quote.routes.length === 0) {
-      throw new Error("No route found.");
-    }
+    if (!quote?.routes?.length) throw new Error("No route found.");
 
     const bestRoute = quote.routes[0];
 
-    // Fetch transaction from Jupiter
-    const txResponse = await fetch("https://quote-api.jup.ag/v6/swap", {
+    const swapRes = await fetch("https://quote-api.jup.ag/v6/swap", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         route: bestRoute,
         userPublicKey: wallet,
         wrapUnwrapSOL: true,
-        feeAccount: "2fLbFXCLGjpxVSbdxNhoXEgckNgs8aCrAeDpYXARfZ4c", // your Solana fee wallet
-        dynamicComputeUnitLimit: true
+        feeAccount: "2fLbFXCLGjpxVSbdxNhoXEgckNgs8aCrAeDpYXARfZ4c",
+        dynamicComputeUnitLimit: true,
       })
     });
 
-    const txData = await txResponse.json();
-    const encodedTx = txData.swapTransaction;
-    const recoveredTx = Uint8Array.from(atob(encodedTx), c => c.charCodeAt(0));
+    const { swapTransaction } = await swapRes.json();
+    const rawTx = Uint8Array.from(atob(swapTransaction), c => c.charCodeAt(0));
 
-    const signedTx = await window.phantom.solana.signTransaction(recoveredTx);
+    const signedTx = await window.phantom.solana.signTransaction(rawTx);
     const txId = await window.phantom.solana.sendRawTransaction(signedTx.serialize());
 
-    document.getElementById("statusMessage").innerText = `Trade sent! TX ID: ${txId}`;
+    status.innerText = `✅ Trade sent! TX: ${txId}`;
   } catch (err) {
     console.error(err);
-    document.getElementById("statusMessage").innerText = `Error: ${err.message}`;
+    status.innerText = `❌ Error: ${err.message}`;
   }
 }
