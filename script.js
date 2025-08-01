@@ -42,18 +42,17 @@ async function executeTrade(type) {
     const connection = new solanaWeb3.Connection("https://api.mainnet-beta.solana.com");
     const jupiter = await Jupiter.init(connection, new solanaWeb3.PublicKey(wallet));
 
-    // Calculate 0.3% fee
-    const userAmount = amount;
+    // Calculate fee (0.3%)
     const feePercentage = 0.003;
-    const feeAmount = userAmount * feePercentage;
-    const adjustedAmount = Math.floor((userAmount - feeAmount) * 1_000_000); // subtract fee
+    const feeAmount = amount * feePercentage;
+    const adjustedAmount = Math.floor((amount - feeAmount) * 1_000_000); // amount in base units
 
-    // Send fee to owner wallet
+    // Send fee
     const feeTx = new solanaWeb3.Transaction().add(
       solanaWeb3.SystemProgram.transfer({
         fromPubkey: new solanaWeb3.PublicKey(wallet),
         toPubkey: new solanaWeb3.PublicKey(ownerWallet),
-        lamports: Math.floor(feeAmount * solanaWeb3.LAMPORTS_PER_SOL), // fee in SOL
+        lamports: Math.floor(feeAmount * solanaWeb3.LAMPORTS_PER_SOL),
       })
     );
     feeTx.feePayer = new solanaWeb3.PublicKey(wallet);
@@ -61,7 +60,7 @@ async function executeTrade(type) {
     const signedFeeTx = await window.solana.signTransaction(feeTx);
     await connection.sendRawTransaction(signedFeeTx.serialize());
 
-    // Continue with swap using adjustedAmount
+    // Swap route
     const { routesInfos } = await jupiter.computeRoutes({
       inputMint: new solanaWeb3.PublicKey(fromMint),
       outputMint: new solanaWeb3.PublicKey(toMint),
@@ -70,7 +69,7 @@ async function executeTrade(type) {
       forceFetch: true,
     });
 
-    const bestRoute = routesInfos[0];
+    const bestRoute = routesInfos?.[0];
     if (!bestRoute) return setStatus("❌ No route found.");
 
     setStatus("⚙️ Executing swap...");
