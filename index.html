@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>QuantomX</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
 
   <!-- Solana & Jupiter SDKs -->
   <script src="https://unpkg.com/@solana/web3.js@1.77.1/lib/index.iife.min.js"></script>
@@ -15,40 +15,40 @@
   <!-- Terms Popup -->
   <div id="terms" class="terms-popup">
     <h2>⚠ Terms & Conditions</h2>
-    <p>By using this platform, you accept all risk. All trades are final. Fees apply.</p>
+    <p>By using this platform, you accept all risks. All trades are final. Fees apply.</p>
     <button id="accept-terms" onclick="acceptTerms()">I Agree</button>
   </div>
 
-  <!-- Main Container -->
+  <!-- Main Interface -->
   <div class="container" id="main-container" style="display: none;">
     <h1 class="app-title">QuantomX</h1>
 
-    <!-- Wallet Section -->
+    <!-- Wallet Connect -->
     <section id="wallet-connection" class="wallet-box">
       <button class="btn" onclick="connectWallet()">🔗 Connect Wallet</button>
       <p id="wallet-address">Wallet: Not Connected</p>
     </section>
 
-    <!-- Trade Section -->
+    <!-- Trade Interface -->
     <section class="trade-box">
       <h3>Swap Tokens</h3>
 
-      <label for="fromToken">From Token Mint Address:</label>
+      <label>From Token Mint:</label>
       <input id="fromToken" placeholder="e.g. SOL mint address" />
 
-      <label for="toToken">To Token Mint Address:</label>
+      <label>To Token Mint:</label>
       <input id="toToken" placeholder="e.g. USDC mint address" />
 
-      <label for="amount">Amount in USD ($):</label>
+      <label>Amount in USD ($):</label>
       <input id="amount" type="number" placeholder="e.g. 50" />
 
-      <label for="slippage">Slippage Tolerance (%):</label>
+      <label>Slippage (%):</label>
       <input id="slippage" type="number" value="1" step="0.1" min="0.1" max="50" />
 
-      <label for="fee">Platform Fee (%):</label>
+      <label>Platform Fee (%):</label>
       <input id="fee" type="number" value="1" step="0.1" min="0" max="10" />
 
-      <label for="tip">Optional Tip (%):</label>
+      <label>Optional Tip (%):</label>
       <input id="tip" type="number" value="0" step="0.1" min="0" max="10" />
 
       <div class="btn-row">
@@ -63,7 +63,7 @@
     </section>
   </div>
 
-  <!-- JS Script -->
+  <!-- Scripts -->
   <script>
     function acceptTerms() {
       document.getElementById("terms").style.display = "none";
@@ -78,12 +78,12 @@
 
     function connectWallet() {
       updateStatus("🔄 Connecting wallet...");
-      // Wallet connection logic goes here...
+      // Phantom wallet logic will be inserted later
     }
 
     function executeTrade(type) {
       updateStatus(`${type === 'buy' ? '🟢 Buying' : '🔴 Selling'}...`);
-      // Trade execution logic goes here...
+      // Jupiter trade logic will be inserted later
     }
   </script>
 </body>
