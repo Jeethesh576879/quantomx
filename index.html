@@ -5,67 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QuantomX</title>
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Solana & Jupiter -->
   <script src="https://unpkg.com/@solana/web3.js@1.77.1/lib/index.iife.min.js"></script>
   <script src="https://unpkg.com/@jup-ag/core/dist/index.iife.js"></script>
 </head>
 
 <body>
+  <!-- Terms Popup -->
+  <div id="terms" class="terms-popup">
+    <h2>⚠ Terms & Conditions</h2>
+    <p>By using this platform, you accept all risk. All trades are final. Fees apply.</p>
+    <button onclick="acceptTerms()">I Agree</button>
+  </div>
+
   <div class="container">
-    <!-- Terms Popup -->
-    <div class="terms-popup" id="terms">
-      <h2>⚠ Terms & Conditions</h2>
-      <p>By using this platform, you agree that profits/losses are your responsibility.</p>
-      <button onclick="acceptTerms()">I Agree</button>
-    </div>
+    <h1>QuantomX</h1>
 
-    <!-- Wallet Connect -->
+    <!-- Wallet Connection -->
     <div id="wallet-connection">
-      <button class="btn" onclick="connectWallet()">Connect Wallet</button>
-      <p id="wallet-address"></p>
+      <button class="btn" onclick="connectWallet()">🔗 Connect Wallet</button>
+      <p id="wallet-address">Wallet: Not Connected</p>
     </div>
 
-    <!-- Trading Box -->
+    <!-- Trade Box -->
     <div class="trade-box">
       <h3>Swap Tokens</h3>
 
       <label>From Token:</label>
-      <input id="fromToken" placeholder="e.g. SOL" />
+      <input id="fromToken" placeholder="e.g. SOL mint address" />
 
       <label>To Token:</label>
-      <input id="toToken" placeholder="e.g. BONK" />
+      <input id="toToken" placeholder="e.g. USDC mint address" />
 
       <label>Amount ($):</label>
       <input id="amount" type="number" placeholder="e.g. 50" />
 
       <div class="btn-row">
-        <button class="btn" onclick="executeTrade('buy')">BUY</button>
-        <button class="btn" onclick="executeTrade('sell')">SELL</button>
+        <button class="btn" onclick="executeTrade('buy')">🟢 BUY</button>
+        <button class="btn" onclick="executeTrade('sell')">🔴 SELL</button>
       </div>
     </div>
 
-    <!-- Status Message -->
+    <!-- Status -->
     <div class="status-box">
-      <p id="statusMessage">Ready to trade.</p>
+      <p id="statusMessage">Waiting...</p>
     </div>
   </div>
 
-  <!-- JS Logic -->
-  <script>
-    async function executeTrade(type) {
-      const fromToken = document.getElementById('fromToken').value.toUpperCase();
-      const toToken = document.getElementById('toToken').value.toUpperCase();
-      const amount = parseFloat(document.getElementById('amount').value);
-
-      if (!fromToken || !toToken || isNaN(amount)) {
-        alert("Fill all fields correctly.");
-        return;
-      }
-
-      alert(`Simulated ${type.toUpperCase()} of $${amount} from ${fromToken} to ${toToken}`);
-      document.getElementById("statusMessage").textContent = `Simulated ${type.toUpperCase()} - waiting for real trade setup.`;
-    }
-  </script>
-
+  <!-- Main JS -->
   <script src="script.js"></script>
 </body>
 </html>
