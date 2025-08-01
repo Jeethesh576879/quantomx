@@ -42,7 +42,6 @@
       <label for="amount">Amount in USD ($):</label>
       <input id="amount" type="number" placeholder="e.g. 50" />
 
-      <!-- Trade Options -->
       <label for="slippage">Slippage Tolerance (%):</label>
       <input id="slippage" type="number" value="1" step="0.1" min="0.1" max="50" />
 
@@ -52,7 +51,6 @@
       <label for="tip">Optional Tip (%):</label>
       <input id="tip" type="number" value="0" step="0.1" min="0" max="10" />
 
-      <!-- Trade Buttons -->
       <div class="btn-row">
         <button class="btn btn-buy" onclick="executeTrade('buy')">🟢 BUY</button>
         <button class="btn btn-sell" onclick="executeTrade('sell')">🔴 SELL</button>
@@ -65,7 +63,28 @@
     </section>
   </div>
 
-  <!-- Main JS -->
-  <script src="script.js"></script>
+  <!-- JS Script -->
+  <script>
+    function acceptTerms() {
+      document.getElementById("terms").style.display = "none";
+      document.getElementById("main-container").style.display = "block";
+    }
+
+    function updateStatus(message, isError = false) {
+      const status = document.getElementById("statusMessage");
+      status.textContent = message;
+      status.style.color = isError ? "red" : "green";
+    }
+
+    function connectWallet() {
+      updateStatus("🔄 Connecting wallet...");
+      // Wallet connection logic goes here...
+    }
+
+    function executeTrade(type) {
+      updateStatus(`${type === 'buy' ? '🟢 Buying' : '🔴 Selling'}...`);
+      // Trade execution logic goes here...
+    }
+  </script>
 </body>
 </html>
