@@ -1,5 +1,6 @@
 let walletAddress = null;
 
+// Connect Phantom wallet
 async function connectWallet() {
   if (!window.solana || !window.solana.isPhantom) {
     alert("Phantom Wallet not found. Install it first.");
@@ -15,14 +16,13 @@ async function connectWallet() {
   }
 }
 
+// Accept terms and show trading UI
 function acceptTerms() {
   document.getElementById("terms").style.display = "none";
   document.getElementById("main-container").style.display = "block";
 }
 
-// -----------------------------
-// Swap Logic (Basic Placeholder)
-// -----------------------------
+// Execute basic swap (placeholder until Jupiter API added)
 async function executeTrade(type) {
   const fromMint = document.getElementById("fromToken").value.trim();
   const toMint = document.getElementById("toToken").value.trim();
@@ -44,13 +44,11 @@ async function executeTrade(type) {
     // Placeholder - Jupiter integration will come later
     await new Promise((r) => setTimeout(r, 2000)); // simulate delay
 
-    // Calculate fee + tip
+    // Calculate and show fee + tip collected
     const totalFee = (amountUSD * (feePercent + tipPercent)) / 100;
-
-    // Show success message
     statusMsg.innerText = `✅ ${type.toUpperCase()} success! Fee collected: $${totalFee.toFixed(2)}`;
   } catch (err) {
-    console.error(err);
+    console.error("Transaction error:", err);
     statusMsg.innerText = "❌ Trade failed.";
   }
 }
