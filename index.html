@@ -1,139 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="bg-gray-900 text-white">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>QuantomX Swap</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/@jup-ag/core"></script>
+  <title>QuantomX - Meme Coin Tracker</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
 </head>
-<body class="bg-gray-900 text-white">
+<body class="p-4">
 
-  <!-- Terms Popup -->
-  <div id="terms" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-    <div class="bg-gray-800 p-6 rounded-xl shadow-xl text-center w-11/12 max-w-md">
-      <h2 class="text-2xl font-bold mb-4">Terms & Conditions</h2>
-      <p class="mb-4 text-sm text-gray-300">By using this platform, you agree to our trading terms. Use at your own risk.</p>
-      <button onclick="acceptTerms()" class="bg-green-600 px-4 py-2 rounded-full hover:bg-green-700 transition">Accept</button>
+  <!-- Header -->
+  <header class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-bold text-green-500">QuantomX</h1>
+    <button class="bg-blue-600 px-4 py-2 rounded-full">Connect Wallet</button>
+  </header>
+
+  <!-- Live Tokens Grid -->
+  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="token-list">
+    <!-- Example Token Card -->
+    <div class="bg-gray-800 rounded-xl p-4 shadow hover:shadow-lg transition">
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center space-x-2">
+          <img src="https://via.placeholder.com/32" class="w-8 h-8 rounded-full" alt="Token Logo"/>
+          <div>
+            <div class="font-semibold text-lg">WATER</div>
+            <div class="text-xs text-gray-400">$WATER</div>
+          </div>
+        </div>
+        <div class="text-xs text-green-400">Launched: 2 min ago</div>
+      </div>
+      <div class="text-sm text-gray-300 mb-2">Market Cap: $56K</div>
+      <div class="text-sm text-gray-300 mb-2">Volume: $12.1K</div>
+      <div class="text-sm text-yellow-400 mb-4">+214% ↑</div>
+      <button class="w-full bg-green-600 py-2 rounded-full hover:bg-green-700">Buy</button>
     </div>
-  </div>
+    <!-- Repeat similar cards dynamically -->
+  </section>
 
-  <!-- Main UI -->
-  <div id="main-container" class="hidden p-4 max-w-6xl mx-auto mt-12 space-y-8">
-
-    <!-- Wallet -->
-    <div class="flex justify-between items-center bg-gray-800 p-4 rounded-xl">
-      <span id="wallet-address">Wallet: Not Connected</span>
-      <button onclick="connectWallet()" class="bg-blue-600 px-4 py-2 rounded-full hover:bg-blue-700 transition">Connect Wallet</button>
-    </div>
-
-    <!-- Token Input -->
-    <div class="space-y-3 bg-gray-800 p-4 rounded-xl">
-      <div>
-        <label>From Token (Mint Address)</label>
-        <input id="fromToken" class="w-full p-2 rounded bg-gray-700" placeholder="Enter source token mint">
-      </div>
-      <div>
-        <label>To Token (Mint Address)</label>
-        <input id="toToken" class="w-full p-2 rounded bg-gray-700" placeholder="Enter target token mint">
-      </div>
-      <div>
-        <label>Amount in USD</label>
-        <input id="amount" type="number" class="w-full p-2 rounded bg-gray-700" placeholder="e.g., 50">
-      </div>
-    </div>
-
-    <!-- Settings -->
-    <div class="space-y-3 bg-gray-800 p-4 rounded-xl">
-      <div>
-        <label>Slippage %</label>
-        <input id="slippage" type="number" class="w-full p-2 rounded bg-gray-700" placeholder="e.g., 0.5">
-      </div>
-      <div>
-        <label>Fee % (goes to owner)</label>
-        <input id="fee" type="number" class="w-full p-2 rounded bg-gray-700" value="0.3">
-      </div>
-      <div>
-        <label>Tip % (optional)</label>
-        <input id="tip" type="number" class="w-full p-2 rounded bg-gray-700" placeholder="e.g., 0.2">
-      </div>
-    </div>
-
-    <!-- Trade Buttons -->
-    <div class="flex justify-between gap-4">
-      <button onclick="executeTrade('buy')" class="flex-1 bg-green-600 px-4 py-2 rounded-full hover:bg-green-700">Buy</button>
-      <button onclick="executeTrade('sell')" class="flex-1 bg-red-600 px-4 py-2 rounded-full hover:bg-red-700">Sell</button>
-    </div>
-
-    <!-- Status -->
-    <div id="statusMessage" class="text-center text-yellow-400 font-medium mt-4"></div>
-
-    <!-- 🔥 Live Meme Coins Feed -->
-    <div class="bg-gray-800 p-6 rounded-xl shadow-lg mt-12">
-      <h2 class="text-xl font-bold mb-6 text-center">🔥 New Meme Coin Launches</h2>
-      <div id="coinFeed" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- Coin cards will be dynamically loaded here -->
-      </div>
-    </div>
-  </div>
-
-  <!-- Main App Logic -->
-  <script>
-    function acceptTerms() {
-      document.getElementById("terms").style.display = "none";
-      document.getElementById("main-container").classList.remove("hidden");
-    }
-
-    function connectWallet() {
-      alert("Wallet connect not yet integrated.");
-    }
-
-    function executeTrade(type) {
-      const from = document.getElementById("fromToken").value;
-      const to = document.getElementById("toToken").value;
-      const amt = document.getElementById("amount").value;
-      document.getElementById("statusMessage").innerText = `Processing ${type.toUpperCase()} for $${amt}...`;
-    }
-
-    async function loadLiveCoins() {
-      try {
-        const res = await fetch('https://api.birdseye.so/solana/tokens');
-        const tokens = await res.json();
-        const container = document.getElementById("coinFeed");
-        container.innerHTML = "";
-
-        tokens.slice(0, 15).forEach((token) => {
-          const card = document.createElement("div");
-          card.className = "bg-gray-700 p-4 rounded-xl shadow";
-
-          card.innerHTML = `
-            <div class="flex justify-between items-center">
-              <div>
-                <h3 class="text-lg font-bold">${token.name}</h3>
-                <p class="text-sm text-gray-400">${token.symbol}</p>
-              </div>
-              <span class="text-green-400 font-semibold">
-                ${token.price ? "$" + token.price.toFixed(8) : "N/A"}
-              </span>
-            </div>
-            <div class="mt-2 text-sm text-gray-300">
-              Volume: ${token.volume ? "$" + Number(token.volume).toLocaleString() : "N/A"}<br />
-              Liquidity: ${token.liquidity ? "$" + Number(token.liquidity).toLocaleString() : "N/A"}
-            </div>
-            <div class="mt-4 flex gap-2">
-              <a href="https://birdeye.so/token/${token.address}?chain=solana" target="_blank" class="bg-blue-600 px-3 py-1 rounded-full text-sm hover:bg-blue-700">Chart</a>
-              <a href="https://jup.ag/swap/SOL-${token.address}" target="_blank" class="bg-green-600 px-3 py-1 rounded-full text-sm hover:bg-green-700">Trade</a>
-            </div>
-          `;
-          container.appendChild(card);
-        });
-      } catch (err) {
-        console.error("Error loading tokens:", err);
-      }
-    }
-
-    loadLiveCoins();
-    setInterval(loadLiveCoins, 15000); // refresh every 15 sec
-  </script>
 </body>
 </html>
