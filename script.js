@@ -24,7 +24,8 @@ function acceptTerms() {
 }
 
 function setStatus(msg) {
-  document.getElementById("statusMessage").textContent = msg;
+  const status = document.getElementById("statusMessage");
+  status.innerHTML = msg;
 }
 
 async function executeTrade(type) {
@@ -42,12 +43,12 @@ async function executeTrade(type) {
     const connection = new solanaWeb3.Connection("https://api.mainnet-beta.solana.com");
     const jupiter = await Jupiter.init(connection, new solanaWeb3.PublicKey(wallet));
 
-    // Calculate fee (0.3%)
+    // Calculate 0.3% fee
     const feePercentage = 0.003;
     const feeAmount = amount * feePercentage;
-    const adjustedAmount = Math.floor((amount - feeAmount) * 1_000_000); // amount in base units
+    const adjustedAmount = Math.floor((amount - feeAmount) * 1_000_000); // assuming 6 decimals
 
-    // Send fee
+    // Send 0.3% fee to owner
     const feeTx = new solanaWeb3.Transaction().add(
       solanaWeb3.SystemProgram.transfer({
         fromPubkey: new solanaWeb3.PublicKey(wallet),
@@ -55,17 +56,19 @@ async function executeTrade(type) {
         lamports: Math.floor(feeAmount * solanaWeb3.LAMPORTS_PER_SOL),
       })
     );
+
     feeTx.feePayer = new solanaWeb3.PublicKey(wallet);
     feeTx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+
     const signedFeeTx = await window.solana.signTransaction(feeTx);
     await connection.sendRawTransaction(signedFeeTx.serialize());
 
-    // Find route
+    // Find best route
     const { routesInfos } = await jupiter.computeRoutes({
       inputMint: new solanaWeb3.PublicKey(fromMint),
       outputMint: new solanaWeb3.PublicKey(toMint),
       amount: adjustedAmount,
-      slippage: 1,
+      slippage: 1, // 1% slippage
       forceFetch: true,
     });
 
@@ -75,11 +78,12 @@ async function executeTrade(type) {
     setStatus("⚙️ Executing swap...");
 
     const { transactions } = await jupiter.exchange({ routeInfo: bestRoute });
+
     const signedTx = await window.solana.signTransaction(transactions[0].transaction);
     const txid = await connection.sendRawTransaction(signedTx.serialize());
     await connection.confirmTransaction(txid, "processed");
 
-    setStatus(`✅ Swap done! [View Tx](https://solscan.io/tx/${txid})`);
+    setStatus(`✅ Swap done! <a href="https://solscan.io/tx/${txid}" target="_blank">View Tx</a>`);
   } catch (error) {
     console.error(error);
     setStatus("❌ Swap failed.");
