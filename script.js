@@ -42,12 +42,30 @@ async function executeTrade(type) {
     const connection = new solanaWeb3.Connection("https://api.mainnet-beta.solana.com");
     const jupiter = await Jupiter.init(connection, new solanaWeb3.PublicKey(wallet));
 
-    const inputAmount = Math.floor(amount * 1_000_000); // assuming 6 decimals (USDC-style)
+    // Calculate 0.3% fee
+    const userAmount = amount;
+    const feePercentage = 0.003;
+    const feeAmount = userAmount * feePercentage;
+    const adjustedAmount = Math.floor((userAmount - feeAmount) * 1_000_000); // subtract fee
 
+    // Send fee to owner wallet
+    const feeTx = new solanaWeb3.Transaction().add(
+      solanaWeb3.SystemProgram.transfer({
+        fromPubkey: new solanaWeb3.PublicKey(wallet),
+        toPubkey: new solanaWeb3.PublicKey(ownerWallet),
+        lamports: Math.floor(feeAmount * solanaWeb3.LAMPORTS_PER_SOL), // fee in SOL
+      })
+    );
+    feeTx.feePayer = new solanaWeb3.PublicKey(wallet);
+    feeTx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+    const signedFeeTx = await window.solana.signTransaction(feeTx);
+    await connection.sendRawTransaction(signedFeeTx.serialize());
+
+    // Continue with swap using adjustedAmount
     const { routesInfos } = await jupiter.computeRoutes({
       inputMint: new solanaWeb3.PublicKey(fromMint),
       outputMint: new solanaWeb3.PublicKey(toMint),
-      amount: inputAmount,
+      amount: adjustedAmount,
       slippage: 1,
       forceFetch: true,
     });
@@ -63,9 +81,6 @@ async function executeTrade(type) {
     await connection.confirmTransaction(txid, "processed");
 
     setStatus(`✅ Swap done! [View Tx](https://solscan.io/tx/${txid})`);
-
-    // Optional: tip or fee transfer to ownerWallet
-    // You can implement a transfer of % of amount if needed here.
   } catch (error) {
     console.error(error);
     setStatus("❌ Swap failed.");
