@@ -1,18 +1,30 @@
-<script src="https://unpkg.com/@solana/web3.js@1.77.1/lib/index.iife.min.js"></script>
-<script src="https://unpkg.com/@jup-ag/core/dist/index.iife.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuantomX</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/@solana/web3.js@1.77.1/lib/index.iife.min.js"></script>
+  <script src="https://unpkg.com/@jup-ag/core/dist/index.iife.js"></script>
+</head>
+
 <body>
   <div class="container">
+    <!-- Terms Popup -->
     <div class="terms-popup" id="terms">
       <h2>⚠ Terms & Conditions</h2>
       <p>By using this platform, you agree that profits/losses are your responsibility.</p>
       <button onclick="acceptTerms()">I Agree</button>
     </div>
 
+    <!-- Wallet Connect -->
     <div id="wallet-connection">
       <button class="btn" onclick="connectWallet()">Connect Wallet</button>
       <p id="wallet-address"></p>
     </div>
 
+    <!-- Trading Box -->
     <div class="trade-box">
       <h3>Swap Tokens</h3>
 
@@ -31,6 +43,7 @@
       </div>
     </div>
 
+    <!-- Status Message -->
     <div class="status-box">
       <p id="statusMessage">Ready to trade.</p>
     </div>
@@ -55,3 +68,4 @@
 
   <script src="script.js"></script>
 </body>
+</html>
