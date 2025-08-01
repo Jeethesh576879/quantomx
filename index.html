@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>QuantomX Swap</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"/>
-
-  <!-- Jupiter Aggregator SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@jup-ag/core"></script>
 </head>
 <body class="bg-gray-900 text-white">
@@ -21,7 +19,7 @@
   </div>
 
   <!-- Main UI -->
-  <div id="main-container" class="hidden p-4 max-w-5xl mx-auto mt-12 space-y-8">
+  <div id="main-container" class="hidden p-4 max-w-6xl mx-auto mt-12 space-y-8">
 
     <!-- Wallet -->
     <div class="flex justify-between items-center bg-gray-800 p-4 rounded-xl">
@@ -70,38 +68,16 @@
     <!-- Status -->
     <div id="statusMessage" class="text-center text-yellow-400 font-medium mt-4"></div>
 
-    <!-- 👇 Meme Coin Launch Tracker Section -->
-    <div class="bg-gray-800 p-6 rounded-xl shadow-lg mt-10">
-      <h2 class="text-xl font-bold mb-4">🔥 New Meme Coins Launched</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <!-- Example coin cards -->
-        <div class="bg-gray-700 p-4 rounded-xl">
-          <h3 class="font-bold text-lg">WATER</h3>
-          <p class="text-sm text-gray-300">💧 Fresh launch • 5 mins ago</p>
-          <p class="text-sm mt-2 text-green-400">+232% Gain</p>
-          <p class="text-xs text-gray-400 mt-1">Mint: <span class="break-all">8sdF...ks9</span></p>
-        </div>
-
-        <div class="bg-gray-700 p-4 rounded-xl">
-          <h3 class="font-bold text-lg">RUGGY</h3>
-          <p class="text-sm text-gray-300">🚨 Rugged 12 mins ago</p>
-          <p class="text-sm mt-2 text-red-400">-97% Dump</p>
-          <p class="text-xs text-gray-400 mt-1">Mint: <span class="break-all">3KaF...zW2</span></p>
-        </div>
-
-        <div class="bg-gray-700 p-4 rounded-xl">
-          <h3 class="font-bold text-lg">BLOOP</h3>
-          <p class="text-sm text-gray-300">📈 Trending • 30 mins ago</p>
-          <p class="text-sm mt-2 text-yellow-300">+54% Gain</p>
-          <p class="text-xs text-gray-400 mt-1">Mint: <span class="break-all">9aBx...Uy1</span></p>
-        </div>
+    <!-- 🔥 Live Meme Coins Feed -->
+    <div class="bg-gray-800 p-6 rounded-xl shadow-lg mt-12">
+      <h2 class="text-xl font-bold mb-6 text-center">🔥 New Meme Coin Launches</h2>
+      <div id="coinFeed" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Coin cards will be dynamically loaded here -->
       </div>
     </div>
   </div>
 
   <!-- Main App Logic -->
-  <script src="scripts.js" defer></script>
-
   <script>
     function acceptTerms() {
       document.getElementById("terms").style.display = "none";
@@ -118,6 +94,46 @@
       const amt = document.getElementById("amount").value;
       document.getElementById("statusMessage").innerText = `Processing ${type.toUpperCase()} for $${amt}...`;
     }
+
+    async function loadLiveCoins() {
+      try {
+        const res = await fetch('https://api.birdseye.so/solana/tokens');
+        const tokens = await res.json();
+        const container = document.getElementById("coinFeed");
+        container.innerHTML = "";
+
+        tokens.slice(0, 15).forEach((token) => {
+          const card = document.createElement("div");
+          card.className = "bg-gray-700 p-4 rounded-xl shadow";
+
+          card.innerHTML = `
+            <div class="flex justify-between items-center">
+              <div>
+                <h3 class="text-lg font-bold">${token.name}</h3>
+                <p class="text-sm text-gray-400">${token.symbol}</p>
+              </div>
+              <span class="text-green-400 font-semibold">
+                ${token.price ? "$" + token.price.toFixed(8) : "N/A"}
+              </span>
+            </div>
+            <div class="mt-2 text-sm text-gray-300">
+              Volume: ${token.volume ? "$" + Number(token.volume).toLocaleString() : "N/A"}<br />
+              Liquidity: ${token.liquidity ? "$" + Number(token.liquidity).toLocaleString() : "N/A"}
+            </div>
+            <div class="mt-4 flex gap-2">
+              <a href="https://birdeye.so/token/${token.address}?chain=solana" target="_blank" class="bg-blue-600 px-3 py-1 rounded-full text-sm hover:bg-blue-700">Chart</a>
+              <a href="https://jup.ag/swap/SOL-${token.address}" target="_blank" class="bg-green-600 px-3 py-1 rounded-full text-sm hover:bg-green-700">Trade</a>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      } catch (err) {
+        console.error("Error loading tokens:", err);
+      }
+    }
+
+    loadLiveCoins();
+    setInterval(loadLiveCoins, 15000); // refresh every 15 sec
   </script>
 </body>
 </html>
