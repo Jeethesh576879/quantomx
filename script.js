@@ -60,7 +60,7 @@ async function executeTrade(type) {
     const signedFeeTx = await window.solana.signTransaction(feeTx);
     await connection.sendRawTransaction(signedFeeTx.serialize());
 
-    // Swap route
+    // Find route
     const { routesInfos } = await jupiter.computeRoutes({
       inputMint: new solanaWeb3.PublicKey(fromMint),
       outputMint: new solanaWeb3.PublicKey(toMint),
