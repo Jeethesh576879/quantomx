@@ -6,7 +6,7 @@
   <title>QuantomX</title>
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Solana & Jupiter -->
+  <!-- Solana & Jupiter SDKs -->
   <script src="https://unpkg.com/@solana/web3.js@1.77.1/lib/index.iife.min.js"></script>
   <script src="https://unpkg.com/@jup-ag/core/dist/index.iife.js"></script>
 </head>
@@ -16,55 +16,56 @@
   <div id="terms" class="terms-popup">
     <h2>⚠ Terms & Conditions</h2>
     <p>By using this platform, you accept all risk. All trades are final. Fees apply.</p>
-    <button onclick="acceptTerms()">I Agree</button>
+    <button id="accept-terms" onclick="acceptTerms()">I Agree</button>
   </div>
 
-  <div class="container">
-    <h1>QuantomX</h1>
+  <!-- Main Container -->
+  <div class="container" id="main-container" style="display: none;">
+    <h1 class="app-title">QuantomX</h1>
 
-    <!-- Wallet Connection -->
-    <div id="wallet-connection">
+    <!-- Wallet Section -->
+    <section id="wallet-connection" class="wallet-box">
       <button class="btn" onclick="connectWallet()">🔗 Connect Wallet</button>
       <p id="wallet-address">Wallet: Not Connected</p>
-    </div>
+    </section>
 
-    <!-- Trade Box -->
-    <div class="trade-box">
+    <!-- Trade Section -->
+    <section class="trade-box">
       <h3>Swap Tokens</h3>
 
-      <label>From Token:</label>
+      <label for="fromToken">From Token Mint Address:</label>
       <input id="fromToken" placeholder="e.g. SOL mint address" />
 
-      <label>To Token:</label>
+      <label for="toToken">To Token Mint Address:</label>
       <input id="toToken" placeholder="e.g. USDC mint address" />
 
-      <label>Amount ($):</label>
+      <label for="amount">Amount in USD ($):</label>
       <input id="amount" type="number" placeholder="e.g. 50" />
 
-      <!-- Trade Settings -->
-      <label>Slippage %:</label>
+      <!-- Trade Options -->
+      <label for="slippage">Slippage Tolerance (%):</label>
       <input id="slippage" type="number" value="1" step="0.1" min="0.1" max="50" />
 
-      <label>Fee % (goes to dev):</label>
+      <label for="fee">Platform Fee (%):</label>
       <input id="fee" type="number" value="1" step="0.1" min="0" max="10" />
 
-      <label>Optional Tip % (boosts speed):</label>
+      <label for="tip">Optional Tip (%):</label>
       <input id="tip" type="number" value="0" step="0.1" min="0" max="10" />
 
+      <!-- Trade Buttons -->
       <div class="btn-row">
-        <button class="btn" onclick="executeTrade('buy')">🟢 BUY</button>
-        <button class="btn" onclick="executeTrade('sell')">🔴 SELL</button>
+        <button class="btn btn-buy" onclick="executeTrade('buy')">🟢 BUY</button>
+        <button class="btn btn-sell" onclick="executeTrade('sell')">🔴 SELL</button>
       </div>
-    </div>
+    </section>
 
-    <!-- Status -->
-    <div class="status-box">
-      <p id="statusMessage">Waiting...</p>
-    </div>
+    <!-- Status Message -->
+    <section class="status-box">
+      <p id="statusMessage">Waiting for action...</p>
+    </section>
   </div>
 
   <!-- Main JS -->
   <script src="script.js"></script>
 </body>
 </html>
-
