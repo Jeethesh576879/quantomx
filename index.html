@@ -21,7 +21,7 @@
   </div>
 
   <!-- Main UI -->
-  <div id="main-container" class="hidden p-4 max-w-xl mx-auto mt-12 space-y-6">
+  <div id="main-container" class="hidden p-4 max-w-5xl mx-auto mt-12 space-y-8">
 
     <!-- Wallet -->
     <div class="flex justify-between items-center bg-gray-800 p-4 rounded-xl">
@@ -69,9 +69,55 @@
 
     <!-- Status -->
     <div id="statusMessage" class="text-center text-yellow-400 font-medium mt-4"></div>
+
+    <!-- 👇 Meme Coin Launch Tracker Section -->
+    <div class="bg-gray-800 p-6 rounded-xl shadow-lg mt-10">
+      <h2 class="text-xl font-bold mb-4">🔥 New Meme Coins Launched</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Example coin cards -->
+        <div class="bg-gray-700 p-4 rounded-xl">
+          <h3 class="font-bold text-lg">WATER</h3>
+          <p class="text-sm text-gray-300">💧 Fresh launch • 5 mins ago</p>
+          <p class="text-sm mt-2 text-green-400">+232% Gain</p>
+          <p class="text-xs text-gray-400 mt-1">Mint: <span class="break-all">8sdF...ks9</span></p>
+        </div>
+
+        <div class="bg-gray-700 p-4 rounded-xl">
+          <h3 class="font-bold text-lg">RUGGY</h3>
+          <p class="text-sm text-gray-300">🚨 Rugged 12 mins ago</p>
+          <p class="text-sm mt-2 text-red-400">-97% Dump</p>
+          <p class="text-xs text-gray-400 mt-1">Mint: <span class="break-all">3KaF...zW2</span></p>
+        </div>
+
+        <div class="bg-gray-700 p-4 rounded-xl">
+          <h3 class="font-bold text-lg">BLOOP</h3>
+          <p class="text-sm text-gray-300">📈 Trending • 30 mins ago</p>
+          <p class="text-sm mt-2 text-yellow-300">+54% Gain</p>
+          <p class="text-xs text-gray-400 mt-1">Mint: <span class="break-all">9aBx...Uy1</span></p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Main App Logic -->
   <script src="scripts.js" defer></script>
+
+  <script>
+    function acceptTerms() {
+      document.getElementById("terms").style.display = "none";
+      document.getElementById("main-container").classList.remove("hidden");
+    }
+
+    function connectWallet() {
+      alert("Wallet connect not yet integrated.");
+    }
+
+    function executeTrade(type) {
+      const from = document.getElementById("fromToken").value;
+      const to = document.getElementById("toToken").value;
+      const amt = document.getElementById("amount").value;
+      document.getElementById("statusMessage").innerText = `Processing ${type.toUpperCase()} for $${amt}...`;
+    }
+  </script>
 </body>
 </html>
