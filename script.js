@@ -1,5 +1,5 @@
 let wallet = null;
-
+const ownerWallet = "2fLbFXCLGjpxVSbdxNhoXEgckNgs8aCrAeDpYXARfZ4c"; // Your fee wallet
 async function connectWallet() {
   try {
     const provider = window.phantom?.solana;
