@@ -1,113 +1,109 @@
-/* General Styles */
 body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #0d1117;
+  color: #c9d1d9;
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #0d0d0d;
-  color: #f0f0f0;
-  padding: 20px;
+  padding: 0;
 }
 
-/* Terms Popup */
-.terms-popup {
-  background-color: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 10px;
-  padding: 20px;
-  max-width: 400px;
-  margin: 100px auto;
-  text-align: center;
-  box-shadow: 0 0 10px #444;
-}
-
-.terms-popup button {
-  background-color: #00c853;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-/* Main Container */
 .container {
   max-width: 600px;
-  margin: auto;
+  margin: 60px auto;
+  padding: 20px;
+  background-color: #161b22;
+  border-radius: 16px;
+  box-shadow: 0 0 10px #010409;
 }
 
-/* App Title */
 .app-title {
   text-align: center;
-  font-size: 2em;
+  font-size: 32px;
   margin-bottom: 20px;
+  color: #58a6ff;
 }
 
-/* Wallet Box */
-.wallet-box {
-  background-color: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 20px;
-  text-align: center;
+.wallet-box, .trade-box, .status-box {
+  margin-bottom: 30px;
 }
 
-/* Trade Box */
-.trade-box {
-  background-color: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 20px;
+label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: bold;
 }
 
-.trade-box input {
+input {
   width: 100%;
   padding: 10px;
-  margin-top: 5px;
-  margin-bottom: 15px;
-  border-radius: 6px;
-  border: 1px solid #555;
-  background-color: #111;
-  color: #f0f0f0;
+  margin-bottom: 12px;
+  border: none;
+  border-radius: 10px;
+  background-color: #0d1117;
+  color: white;
+  border: 1px solid #30363d;
 }
 
-/* Buttons */
 .btn {
-  padding: 10px 15px;
+  padding: 12px 20px;
+  margin: 6px 4px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-weight: bold;
+  background-color: #21262d;
+  color: #c9d1d9;
   cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn:hover {
+  background-color: #30363d;
 }
 
 .btn-buy {
-  background-color: #00e676;
-  color: #000;
+  background-color: #238636;
 }
 
 .btn-sell {
-  background-color: #ff1744;
-  color: #fff;
+  background-color: #da3633;
 }
 
-.btn-row {
-  display: flex;
-  justify-content: space-between;
+.btn-buy:hover {
+  background-color: #2ea043;
 }
 
-/* Status Box */
+.btn-sell:hover {
+  background-color: #f85149;
+}
+
 .status-box {
-  background-color: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 10px;
-  padding: 15px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.terms-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(13, 17, 23, 0.95);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 30px;
   text-align: center;
 }
 
-/* Responsive */
-@media screen and (max-width: 600px) {
-  .btn-row {
-    flex-direction: column;
-    gap: 10px;
-  }
+#accept-terms {
+  margin-top: 20px;
+  background-color: #58a6ff;
+  border: none;
+  padding: 10px 20px;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
 }
