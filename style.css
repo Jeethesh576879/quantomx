@@ -1,125 +1,113 @@
-/* ===== Global Reset ===== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* ===== Body Style ===== */
+/* General Styles */
 body {
-  background-color: #0d1117;
-  color: #c9d1d9;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 20px;
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #0d0d0d;
+  color: #f0f0f0;
+  padding: 20px;
 }
 
-/* ===== Terms & Conditions Popup ===== */
+/* Terms Popup */
 .terms-popup {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.9);
-  color: white;
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 400px;
+  margin: 100px auto;
   text-align: center;
-}
-
-.terms-popup h2 {
-  margin-bottom: 20px;
-  font-size: 28px;
-}
-
-.terms-popup p {
-  font-size: 18px;
-  margin-bottom: 20px;
+  box-shadow: 0 0 10px #444;
 }
 
 .terms-popup button {
-  background: #238636;
-  border: none;
+  background-color: #00c853;
   color: white;
-  font-size: 16px;
-  padding: 10px 25px;
+  padding: 10px 20px;
+  border: none;
   border-radius: 8px;
   cursor: pointer;
 }
 
-/* ===== Main Container ===== */
+/* Main Container */
 .container {
-  width: 100%;
-  max-width: 480px;
-  background-color: #161b22;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  max-width: 600px;
+  margin: auto;
 }
 
-/* ===== Headings ===== */
-h1, h3 {
+/* App Title */
+.app-title {
   text-align: center;
+  font-size: 2em;
   margin-bottom: 20px;
 }
 
-/* ===== Buttons ===== */
-.btn {
-  width: 100%;
-  background-color: #238636;
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  margin-top: 10px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.2s ease;
+/* Wallet Box */
+.wallet-box {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-.btn:hover {
-  background-color: #2ea043;
-}
-
-/* ===== Trade Box ===== */
-.trade-box label {
-  margin-top: 10px;
-  display: block;
-  font-weight: bold;
+/* Trade Box */
+.trade-box {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
 }
 
 .trade-box input {
   width: 100%;
   padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #30363d;
-  margin-bottom: 10px;
-  background-color: #0d1117;
-  color: #c9d1d9;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background-color: #111;
+  color: #f0f0f0;
 }
 
-/* ===== Button Row ===== */
+/* Buttons */
+.btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-buy {
+  background-color: #00e676;
+  color: #000;
+}
+
+.btn-sell {
+  background-color: #ff1744;
+  color: #fff;
+}
+
 .btn-row {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
 }
 
-.btn-row button {
-  flex: 1;
-}
-
-/* ===== Status Box ===== */
+/* Status Box */
 .status-box {
-  background-color: #21262d;
-  padding: 12px;
-  margin-top: 20px;
-  border-radius: 8px;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 15px;
   text-align: center;
-  color: #8b949e;
-  font-size: 14px;
+}
+
+/* Responsive */
+@media screen and (max-width: 600px) {
+  .btn-row {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
