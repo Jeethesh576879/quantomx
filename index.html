@@ -8,33 +8,55 @@
 </head>
 <body class="p-4">
 
+  <!-- Terms Modal -->
+  <div id="terms-modal" class="fixed inset-0 bg-black bg-opacity-90 flex flex-col items-center justify-center z-50">
+    <div class="max-w-md text-center p-6 bg-gray-800 rounded-xl">
+      <h2 class="text-2xl font-bold text-green-400 mb-4">Terms & Conditions</h2>
+      <p class="text-sm text-gray-300 mb-4">This platform is for high-risk meme coin trading. All swaps are final. By continuing, you agree to the fee model and possible token risk.</p>
+      <button onclick="acceptTerms()" class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-full text-white font-bold">I Accept</button>
+    </div>
+  </div>
+
   <!-- Header -->
   <header class="flex items-center justify-between mb-6">
     <h1 class="text-3xl font-bold text-green-500">QuantomX</h1>
-    <button class="bg-blue-600 px-4 py-2 rounded-full">Connect Wallet</button>
+    <button id="connectBtn" onclick="connectWallet()" class="bg-blue-600 px-4 py-2 rounded-full">Connect Wallet</button>
   </header>
+
+  <!-- Wallet Address -->
+  <div id="walletAddress" class="text-sm text-gray-400 mb-4"></div>
 
   <!-- Live Tokens Grid -->
   <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="token-list">
-    <!-- Example Token Card -->
-    <div class="bg-gray-800 rounded-xl p-4 shadow hover:shadow-lg transition">
-      <div class="flex items-center justify-between mb-2">
-        <div class="flex items-center space-x-2">
-          <img src="https://via.placeholder.com/32" class="w-8 h-8 rounded-full" alt="Token Logo"/>
-          <div>
-            <div class="font-semibold text-lg">WATER</div>
-            <div class="text-xs text-gray-400">$WATER</div>
-          </div>
-        </div>
-        <div class="text-xs text-green-400">Launched: 2 min ago</div>
-      </div>
-      <div class="text-sm text-gray-300 mb-2">Market Cap: $56K</div>
-      <div class="text-sm text-gray-300 mb-2">Volume: $12.1K</div>
-      <div class="text-sm text-yellow-400 mb-4">+214% ↑</div>
-      <button class="w-full bg-green-600 py-2 rounded-full hover:bg-green-700">Buy</button>
-    </div>
-    <!-- Repeat similar cards dynamically -->
+    <!-- Dynamic Token Cards will go here -->
   </section>
 
+  <!-- Status Message -->
+  <div id="statusMessage" class="text-yellow-400 mt-6 text-sm"></div>
+
+  <!-- Script -->
+  <script>
+    function acceptTerms() {
+      document.getElementById("terms-modal").style.display = "none";
+    }
+
+    async function connectWallet() {
+      try {
+        const provider = window.solana;
+        if (!provider || !provider.isPhantom) {
+          alert("Phantom Wallet not found!");
+          return;
+        }
+
+        const resp = await provider.connect();
+        document.getElementById("walletAddress").innerText = "Connected: " + resp.publicKey.toString();
+        document.getElementById("connectBtn").innerText = "Connected";
+        document.getElementById("connectBtn").disabled = true;
+        document.getElementById("connectBtn").classList.add("bg-gray-700");
+      } catch (err) {
+        console.error("Wallet connection failed", err);
+      }
+    }
+  </script>
 </body>
 </html>
