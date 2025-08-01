@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>QuantomX Swap</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"/>
+
+  <!-- Jupiter Aggregator SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@jup-ag/core"></script>
 </head>
 <body class="bg-gray-900 text-white">
 
@@ -38,7 +41,7 @@
       </div>
       <div>
         <label>Amount in USD</label>
-        <input id="amount" class="w-full p-2 rounded bg-gray-700" placeholder="e.g., 50">
+        <input id="amount" type="number" class="w-full p-2 rounded bg-gray-700" placeholder="e.g., 50">
       </div>
     </div>
 
@@ -46,15 +49,15 @@
     <div class="space-y-3 bg-gray-800 p-4 rounded-xl">
       <div>
         <label>Slippage %</label>
-        <input id="slippage" class="w-full p-2 rounded bg-gray-700" placeholder="e.g., 0.5">
+        <input id="slippage" type="number" class="w-full p-2 rounded bg-gray-700" placeholder="e.g., 0.5">
       </div>
       <div>
         <label>Fee % (goes to owner)</label>
-        <input id="fee" class="w-full p-2 rounded bg-gray-700" value="0.3">
+        <input id="fee" type="number" class="w-full p-2 rounded bg-gray-700" value="0.3">
       </div>
       <div>
         <label>Tip % (optional)</label>
-        <input id="tip" class="w-full p-2 rounded bg-gray-700" placeholder="e.g., 0.2">
+        <input id="tip" type="number" class="w-full p-2 rounded bg-gray-700" placeholder="e.g., 0.2">
       </div>
     </div>
 
@@ -68,7 +71,7 @@
     <div id="statusMessage" class="text-center text-yellow-400 font-medium mt-4"></div>
   </div>
 
-  <script src="scripts.js"></script>
+  <!-- Main App Logic -->
+  <script src="scripts.js" defer></script>
 </body>
 </html>
-
