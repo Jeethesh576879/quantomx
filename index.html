@@ -57,6 +57,59 @@
         console.error("Wallet connection failed", err);
       }
     }
+
+    async function fetchTokens() {
+      try {
+        const res = await fetch("https://quote-api.jup.ag/v6/tokens");
+        const tokens = await res.json();
+
+        // Filter tokens that have memes, low market cap, or funny names
+        const filtered = tokens.filter(t =>
+          t.symbol && (
+            t.symbol.toLowerCase().includes("pepe") ||
+            t.symbol.toLowerCase().includes("dog") ||
+            t.symbol.toLowerCase().includes("elon") ||
+            t.symbol.toLowerCase().includes("cat") ||
+            t.symbol.toLowerCase().includes("coin") ||
+            t.name.toLowerCase().includes("meme") ||
+            t.tags?.includes("meme") ||
+            t.name.length < 10
+          )
+        ).slice(0, 15); // limit to 15 coins for now
+
+        const list = document.getElementById("token-list");
+        list.innerHTML = "";
+
+        filtered.forEach(token => {
+          const card = document.createElement("div");
+          card.className = "bg-gray-800 rounded-xl p-4 shadow hover:shadow-xl transition";
+
+          card.innerHTML = `
+            <div class="flex items-center space-x-4 mb-2">
+              <img src="${token.logoURI}" alt="${token.symbol}" class="w-10 h-10 rounded-full"/>
+              <div>
+                <h3 class="font-bold text-lg">${token.symbol}</h3>
+                <p class="text-sm text-gray-400">${token.name}</p>
+              </div>
+            </div>
+            <div class="text-sm text-gray-300">
+              <p><strong>Mint:</strong> ${token.address.slice(0, 6)}...${token.address.slice(-4)}</p>
+              <p><strong>Decimals:</strong> ${token.decimals}</p>
+              <p><strong>Chain:</strong> Solana</p>
+            </div>
+            <button class="mt-3 w-full bg-green-600 hover:bg-green-700 py-2 rounded-full font-bold text-white">Trade</button>
+          `;
+
+          list.appendChild(card);
+        });
+      } catch (error) {
+        document.getElementById("statusMessage").innerText = "Failed to fetch tokens.";
+        console.error(error);
+      }
+    }
+
+    fetchTokens();
   </script>
+
 </body>
 </html>
