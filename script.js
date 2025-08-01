@@ -41,16 +41,16 @@ async function executeTrade(type) {
   statusMsg.innerText = "⏳ Building transaction...";
 
   try {
-    // Placeholder - You’ll integrate full Jupiter API trade route here
+    // Placeholder - Jupiter integration will come later
     await new Promise((r) => setTimeout(r, 2000)); // simulate delay
 
     // Calculate fee + tip
     const totalFee = (amountUSD * (feePercent + tipPercent)) / 100;
+
+    // Show success message
     statusMsg.innerText = `✅ ${type.toUpperCase()} success! Fee collected: $${totalFee.toFixed(2)}`;
   } catch (err) {
     console.error(err);
     statusMsg.innerText = "❌ Trade failed.";
   }
 }
-
-
