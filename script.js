@@ -1,91 +1,56 @@
-let wallet = null;
-const ownerWallet = "2fLbFXCLGjpxVSbdxNhoXEgckNgs8aCrAeDpYXARfZ4c"; // Fee wallet
+let walletAddress = null;
 
 async function connectWallet() {
-  try {
-    const provider = window.phantom?.solana;
-    if (!provider?.isPhantom) {
-      alert("Phantom Wallet not found!");
-      return;
-    }
+  if (!window.solana || !window.solana.isPhantom) {
+    alert("Phantom Wallet not found. Install it first.");
+    return;
+  }
 
-    const res = await provider.connect();
-    wallet = res.publicKey.toString();
-    document.getElementById("wallet-address").textContent = `Wallet: ${wallet}`;
-    setStatus("✅ Wallet connected.");
+  try {
+    const resp = await window.solana.connect();
+    walletAddress = resp.publicKey.toString();
+    document.getElementById("wallet-address").innerText = `Wallet: ${walletAddress}`;
   } catch (err) {
-    setStatus("❌ Wallet connection failed.");
-    console.error(err);
+    console.error("Wallet connection failed:", err);
   }
 }
 
 function acceptTerms() {
   document.getElementById("terms").style.display = "none";
+  document.getElementById("main-container").style.display = "block";
 }
 
-function setStatus(msg) {
-  const status = document.getElementById("statusMessage");
-  status.innerHTML = msg;
-}
-
+// -----------------------------
+// Swap Logic (Basic Placeholder)
+// -----------------------------
 async function executeTrade(type) {
   const fromMint = document.getElementById("fromToken").value.trim();
   const toMint = document.getElementById("toToken").value.trim();
-  const amount = parseFloat(document.getElementById("amount").value.trim());
+  const amountUSD = parseFloat(document.getElementById("amount").value.trim());
+  const slippage = parseFloat(document.getElementById("slippage").value.trim());
+  const feePercent = parseFloat(document.getElementById("fee").value.trim());
+  const tipPercent = parseFloat(document.getElementById("tip").value.trim());
 
-  if (!wallet) return setStatus("❌ Connect your wallet first.");
-  if (!fromMint || !toMint || isNaN(amount) || amount <= 0)
-    return setStatus("❌ Invalid input.");
+  const statusMsg = document.getElementById("statusMessage");
 
-  setStatus(`⏳ Finding best route for ${amount}...`);
+  if (!walletAddress || !fromMint || !toMint || !amountUSD || isNaN(slippage)) {
+    statusMsg.innerText = "❌ Fill all fields correctly.";
+    return;
+  }
+
+  statusMsg.innerText = "⏳ Building transaction...";
 
   try {
-    const connection = new solanaWeb3.Connection("https://api.mainnet-beta.solana.com");
-    const jupiter = await Jupiter.init(connection, new solanaWeb3.PublicKey(wallet));
+    // Placeholder - You’ll integrate full Jupiter API trade route here
+    await new Promise((r) => setTimeout(r, 2000)); // simulate delay
 
-    // Calculate 0.3% fee
-    const feePercentage = 0.003;
-    const feeAmount = amount * feePercentage;
-    const adjustedAmount = Math.floor((amount - feeAmount) * 1_000_000); // assuming 6 decimals
-
-    // Send 0.3% fee to owner
-    const feeTx = new solanaWeb3.Transaction().add(
-      solanaWeb3.SystemProgram.transfer({
-        fromPubkey: new solanaWeb3.PublicKey(wallet),
-        toPubkey: new solanaWeb3.PublicKey(ownerWallet),
-        lamports: Math.floor(feeAmount * solanaWeb3.LAMPORTS_PER_SOL),
-      })
-    );
-
-    feeTx.feePayer = new solanaWeb3.PublicKey(wallet);
-    feeTx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
-
-    const signedFeeTx = await window.solana.signTransaction(feeTx);
-    await connection.sendRawTransaction(signedFeeTx.serialize());
-
-    // Find best route
-    const { routesInfos } = await jupiter.computeRoutes({
-      inputMint: new solanaWeb3.PublicKey(fromMint),
-      outputMint: new solanaWeb3.PublicKey(toMint),
-      amount: adjustedAmount,
-      slippage: 1, // 1% slippage
-      forceFetch: true,
-    });
-
-    const bestRoute = routesInfos?.[0];
-    if (!bestRoute) return setStatus("❌ No route found.");
-
-    setStatus("⚙️ Executing swap...");
-
-    const { transactions } = await jupiter.exchange({ routeInfo: bestRoute });
-
-    const signedTx = await window.solana.signTransaction(transactions[0].transaction);
-    const txid = await connection.sendRawTransaction(signedTx.serialize());
-    await connection.confirmTransaction(txid, "processed");
-
-    setStatus(`✅ Swap done! <a href="https://solscan.io/tx/${txid}" target="_blank">View Tx</a>`);
-  } catch (error) {
-    console.error(error);
-    setStatus("❌ Swap failed.");
+    // Calculate fee + tip
+    const totalFee = (amountUSD * (feePercent + tipPercent)) / 100;
+    statusMsg.innerText = `✅ ${type.toUpperCase()} success! Fee collected: $${totalFee.toFixed(2)}`;
+  } catch (err) {
+    console.error(err);
+    statusMsg.innerText = "❌ Trade failed.";
   }
 }
+
+
