@@ -3,88 +3,72 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>QuantomX</title>
-  <link rel="stylesheet" href="style.css"/>
-
-  <!-- Solana & Jupiter SDKs -->
-  <script src="https://unpkg.com/@solana/web3.js@1.77.1/lib/index.iife.min.js"></script>
-  <script src="https://unpkg.com/@jup-ag/core/dist/index.iife.js"></script>
+  <title>QuantomX Swap</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"/>
 </head>
+<body class="bg-gray-900 text-white">
 
-<body>
   <!-- Terms Popup -->
-  <div id="terms" class="terms-popup">
-    <h2>⚠ Terms & Conditions</h2>
-    <p>By using this platform, you accept all risks. All trades are final. Fees apply.</p>
-    <button id="accept-terms" onclick="acceptTerms()">I Agree</button>
+  <div id="terms" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+    <div class="bg-gray-800 p-6 rounded-xl shadow-xl text-center w-11/12 max-w-md">
+      <h2 class="text-2xl font-bold mb-4">Terms & Conditions</h2>
+      <p class="mb-4 text-sm text-gray-300">By using this platform, you agree to our trading terms. Use at your own risk.</p>
+      <button onclick="acceptTerms()" class="bg-green-600 px-4 py-2 rounded-full hover:bg-green-700 transition">Accept</button>
+    </div>
   </div>
 
-  <!-- Main Interface -->
-  <div class="container" id="main-container" style="display: none;">
-    <h1 class="app-title">QuantomX</h1>
+  <!-- Main UI -->
+  <div id="main-container" class="hidden p-4 max-w-xl mx-auto mt-12 space-y-6">
 
-    <!-- Wallet Connect -->
-    <section id="wallet-connection" class="wallet-box">
-      <button class="btn" onclick="connectWallet()">🔗 Connect Wallet</button>
-      <p id="wallet-address">Wallet: Not Connected</p>
-    </section>
+    <!-- Wallet -->
+    <div class="flex justify-between items-center bg-gray-800 p-4 rounded-xl">
+      <span id="wallet-address">Wallet: Not Connected</span>
+      <button onclick="connectWallet()" class="bg-blue-600 px-4 py-2 rounded-full hover:bg-blue-700 transition">Connect Wallet</button>
+    </div>
 
-    <!-- Trade Interface -->
-    <section class="trade-box">
-      <h3>Swap Tokens</h3>
-
-      <label>From Token Mint:</label>
-      <input id="fromToken" placeholder="e.g. SOL mint address" />
-
-      <label>To Token Mint:</label>
-      <input id="toToken" placeholder="e.g. USDC mint address" />
-
-      <label>Amount in USD ($):</label>
-      <input id="amount" type="number" placeholder="e.g. 50" />
-
-      <label>Slippage (%):</label>
-      <input id="slippage" type="number" value="1" step="0.1" min="0.1" max="50" />
-
-      <label>Platform Fee (%):</label>
-      <input id="fee" type="number" value="1" step="0.1" min="0" max="10" />
-
-      <label>Optional Tip (%):</label>
-      <input id="tip" type="number" value="0" step="0.1" min="0" max="10" />
-
-      <div class="btn-row">
-        <button class="btn btn-buy" onclick="executeTrade('buy')">🟢 BUY</button>
-        <button class="btn btn-sell" onclick="executeTrade('sell')">🔴 SELL</button>
+    <!-- Token Input -->
+    <div class="space-y-3 bg-gray-800 p-4 rounded-xl">
+      <div>
+        <label>From Token (Mint Address)</label>
+        <input id="fromToken" class="w-full p-2 rounded bg-gray-700" placeholder="Enter source token mint">
       </div>
-    </section>
+      <div>
+        <label>To Token (Mint Address)</label>
+        <input id="toToken" class="w-full p-2 rounded bg-gray-700" placeholder="Enter target token mint">
+      </div>
+      <div>
+        <label>Amount in USD</label>
+        <input id="amount" class="w-full p-2 rounded bg-gray-700" placeholder="e.g., 50">
+      </div>
+    </div>
 
-    <!-- Status Message -->
-    <section class="status-box">
-      <p id="statusMessage">Waiting for action...</p>
-    </section>
+    <!-- Settings -->
+    <div class="space-y-3 bg-gray-800 p-4 rounded-xl">
+      <div>
+        <label>Slippage %</label>
+        <input id="slippage" class="w-full p-2 rounded bg-gray-700" placeholder="e.g., 0.5">
+      </div>
+      <div>
+        <label>Fee % (goes to owner)</label>
+        <input id="fee" class="w-full p-2 rounded bg-gray-700" value="0.3">
+      </div>
+      <div>
+        <label>Tip % (optional)</label>
+        <input id="tip" class="w-full p-2 rounded bg-gray-700" placeholder="e.g., 0.2">
+      </div>
+    </div>
+
+    <!-- Trade Buttons -->
+    <div class="flex justify-between gap-4">
+      <button onclick="executeTrade('buy')" class="flex-1 bg-green-600 px-4 py-2 rounded-full hover:bg-green-700">Buy</button>
+      <button onclick="executeTrade('sell')" class="flex-1 bg-red-600 px-4 py-2 rounded-full hover:bg-red-700">Sell</button>
+    </div>
+
+    <!-- Status -->
+    <div id="statusMessage" class="text-center text-yellow-400 font-medium mt-4"></div>
   </div>
 
-  <!-- Scripts -->
-  <script>
-    function acceptTerms() {
-      document.getElementById("terms").style.display = "none";
-      document.getElementById("main-container").style.display = "block";
-    }
-
-    function updateStatus(message, isError = false) {
-      const status = document.getElementById("statusMessage");
-      status.textContent = message;
-      status.style.color = isError ? "red" : "green";
-    }
-
-    function connectWallet() {
-      updateStatus("🔄 Connecting wallet...");
-      // Phantom wallet logic will be inserted later
-    }
-
-    function executeTrade(type) {
-      updateStatus(`${type === 'buy' ? '🟢 Buying' : '🔴 Selling'}...`);
-      // Jupiter trade logic will be inserted later
-    }
-  </script>
+  <script src="scripts.js"></script>
 </body>
 </html>
+
